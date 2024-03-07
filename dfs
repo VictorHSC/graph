@@ -1,0 +1,89 @@
+//Matriz
+
+var matriz = [];
+var tamanho = 9;
+//Função de input/output será via 'web'
+
+const A = 0;
+const B = 1;
+const C = 2;
+const D = 3;
+const E = 4;
+const F = 5;
+const G = 6;
+const H = 7;
+const I = 8;
+
+function inicializarMatriz() {
+    for (i = 0; i < tamanho; i++) {
+        matriz[i] = [];
+        for (j = 0; j < tamanho; j++) {
+            matriz[i][j] = 0;
+        }
+    }
+}
+
+function adicionarArco(verticeA, verticeB) {
+    matriz[verticeA][verticeB] = 1;
+}
+
+function adicionarAresta(verticeA, verticeB) {
+    adicionarArco(verticeA, verticeB);
+    adicionarArco(verticeB, verticeA);
+}
+
+function proximoNaoVisitado(visitados) {
+    for (i = 0; i < tamanho; i++) {
+        if (visitados[i] == undefined) {
+            return i;
+        }
+    }
+}
+
+function DFS(inicio = 0) {
+    let pilha = [];
+    let visitados = [];
+
+    pilha.push(inicio);
+
+    while (pilha.length > 0) {
+        inicio = pilha.shift();
+    
+        if (visitados[inicio] == undefined) {
+            console.log("Percorrido ", inicio+1);
+            visitados[inicio] = 1;
+            matriz[inicio].forEach(function (valor, chave) {
+                if (valor == 1) {
+                    pilha.push(chave);
+                }
+            });
+        }
+        if (pilha.length == 0 && visitados.reduce((a, c) => { return a + (c || 0) }) < tamanho) {
+            pilha.push(proximoNaoVisitado(visitados));
+        }
+    }
+}
+
+inicializarMatriz();
+
+adicionarAresta(A, E);
+adicionarAresta(A, I);
+adicionarAresta(A, F);
+adicionarAresta(A, G);
+
+adicionarAresta(E, F);
+adicionarAresta(E, I);
+
+adicionarAresta(I, F);
+
+adicionarAresta(G, B);
+
+adicionarAresta(C, H);
+
+adicionarAresta(H, D);
+
+
+
+//console.log(matriz);
+
+DFS();
