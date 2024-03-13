@@ -1,0 +1,138 @@
+:root {
+    --border-radius: 25px;
+    --color-primary: #174031;
+    --color-accent: #2C7359;
+    --color-secondary: #0D0D0D;
+    --color-background: #262626;
+    --color-offwhite: #F2F2F2;
+    --gap: 10px;
+}
+
+* {
+    appearance: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--color-background);
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+.grade {
+    background-color: var(--color-secondary);
+    display: grid;
+    gap: var(--gap);
+    grid-template-areas:
+        "acoes log"
+        "grafo grafo";
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 2fr;
+    height: 100%;
+    padding: var(--gap);
+    width: 100%;
+}
+
+.grade .item-grade {
+    background-color: var(--color-background);
+    border-radius: var(--border-radius);
+}
+
+.grade .acoes {
+    grid-area: acoes;
+}
+
+.grade .log {
+    grid-area: log;
+}
+
+.grade .grafo {
+    grid-area: grafo;
+}
+
+#visualizacao {
+    height: 450px;
+}
+
+/* Acões */
+.acoes {
+    display: grid;
+    gap: var(--gap);
+    grid-template-rows: repeat(4, 1fr);
+    padding: var(--gap);
+}
+
+.acoes-item {
+    border: 1px solid var(--color-accent);
+    border-radius: calc(var(--border-radius) / 2);
+    position: relative;
+}
+
+.acoes-item.input {
+    display: grid;
+    gap: 0 var(--gap);
+    grid-template-columns: 6fr 6fr 1fr;
+}
+
+.acoes-item .title {
+    background-color: var(--color-background);
+    color: var(--color-offwhite);
+    font-family: Helvetica;
+    font-size: 12px;
+    left: 8px;
+    padding: 0 5px;
+    position: absolute;
+    top: -8px;
+}
+
+.input-group {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+}
+
+.input-group label {
+    color: var(--color-offwhite);
+    font-family: Helvetica;
+    font-size: 12px;
+    margin: auto 5px;
+    text-align: end;
+}
+
+.input-group label::after {
+    content: ":";
+}
+
+.input-group input,
+.input-group select {
+    background-color: var(--color-offwhite);
+    border: none;
+    border-radius: 5px;
+    color: var(--color-secondary);
+    font-family: Helvetica;
+    font-size: 12px;
+    text-indent: 5px;
+    height: 24px;
+    margin: auto 0;
+}
+
+.acoes-item .input-button {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    border-radius: 0 11.5px 11px 0;
+    border-style: solid;
+    color: var(--color-offwhite);
+    font-family: Helvetica;
+    font-size: 12px;
+}
+
+.acoes-item .input-buttonton:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.acoes-item .button {
+    
+}

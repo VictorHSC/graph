@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafos</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+
+    <div class="grade">
+        <div class="item-grade acoes row">
+            <div class="acoes-item input">
+                <span class="title">Adicionar Vértice</span>
+
+                <div class="input-group">
+                    <label for="input_vertice_id">ID</label>
+                    <input type="number" name="input_vertice_id" id="input_vertice_id" placeholder="0">
+                </div>
+
+                <div class="input-group">
+                    <label for="input_vertice_descricao">DESC.</label>
+                    <input type="text" name="input_vertice_descricao" id="input_vertice_descricao">
+                </div>
+
+                <button class="input-button" type="button" onclick="adicionarVertice()">OK</button>
+            </div>
+
+            <div class="acoes-item input">
+                <span class="title">Adicionar Aresta</span>
+
+                <div class="input-group">
+                    <label for="input_aresta_de">DE</label>
+                    <select name="input_aresta_de" id="input_aresta_de" onfocus="atualizarOpcoes(this)"></select>
+                </div>
+
+                <div class="input-group">
+                    <label for="input_aresta_para">PARA</label>
+                    <select name="input_aresta_para" id="input_aresta_para" onfocus="atualizarOpcoes(this)"></select>
+                </div>
+
+                <button class="input-button" type="button" onclick="adicionarAresta()">OK</button>
+            </div>
+
+            <div class="acoes-item">
+                <span class="title">Carregar Arquivo</span>
+            </div>
+
+            <div class="acoes-item">
+                <span class="title">Realizar Buscas</span>
+
+                <button class="button" onclick="DFS()" title="Depth-First Search (DFS)"
+                    type="button">Profundidade</button>
+
+                <button class="button" onclick="BSF()" title="Breadth-First Search (BFS)" type="button">Largura</button>
+            </div>
+        </div>
+
+        <div class="item-grade log">
+
+        </div>
+
+        <div class="item-grade grafo">
+            <div id="visualizacao"></div>
+        </div>
+    </div>
+
+    <!-- <script src="grafo.js"></script> -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script>
+
+        var id_counter = 0;
+
+        var container = document.getElementById('visualizacao');
+
+        var input_node_id = document.getElementById('input_vertice_id');
+        var input_node_label = document.getElementById('input_vertice_descricao');
+        var input_edge_from = document.getElementById('input_aresta_de');
+        var input_edge_to = document.getElementById('input_aresta_para');
+
+        var options = {
+            interaction: {
+                tooltipDelay: 100,
+                zoomSpeed: 0.25
+            },
+            nodes: {
+                borderWidth: 2,
+                color: {
+                    background: '#F2F2F2',
+                    border: '#2C7359',
+                    highlight: {
+                        background: '#F2F2F2',
+                        border: '#2C7359'
+                    }
+                }
+            },
+            edges: {
+                width: 2,
+                color: '#2C7359'
+            }
+        }
+
+        var nodes = new vis.DataSet();
+        var edges = new vis.DataSet()
+
+        var network = new vis.Network(container, { nodes, edges }, options);
+
+        const visitando = function (id) {
+            nodes.getIds().forEach(id => {
+                let node = nodes.get(id);
+                node.color = {
+                    background: '#F2F2F2',
+                    border: '#2C7359'
+                }
+                nodes.update(node);
+            });
+
+            let node = nodes.get(id);
+            node.color = {
+                background: '#F2F2F2',
+                border: '#FF0000'
+            }
+
+            nodes.update(node);
+        }
+
+        const adicionarVertice = function (id = null, descricao = null) {
+            let newNode;
+
+            if (id != null && descricao != null) {
+                newNode = {
+                    id: id,
+                    label: descricao,
+                    title: "Id: " + id + "\nDesc.: " + descricao
+                };
+            } else {
+                if (input_node_id.value == "") {
+                    input_node_id.value = id_counter;
+                    id_counter++;
+                    input_node_id.placeholder = id_counter;
+                }
+
+                newNode = {
+                    id: input_node_id.value,
+                    label: input_node_label.value,
+                    title: "Id: " + input_node_id.value + "\nDesc.: " + input_node_label.value
+                };
+            }
+
+            nodes.add(newNode);
+
+            input_node_id.value = "";
+            input_node_label.value = "";
+        }
+
+        const adicionarAresta = function (de = null, para = null) {
+            let newEdge;
+            if (de != null && para != null) {
+                newEdge = {
+                    from: de,
+                    to: para
+                };
+            } else {
+                newEdge = {
+                    from: input_edge_from.value,
+                    to: input_edge_to.value
+                };
+            }
+            edges.add(newEdge);
+        }
+
+        const atualizarOpcoes = function (elemento) {
+            elemento.length = 0;
+            nodes.forEach(node => {
+                elemento.options[elemento.options.length] = new Option(node.label, node.id);
+            });
+        }
+
+        document.addEventListener('keyup', (e) => {
+
+        });
+    </script>
+    <script src="dfs.js"></script>
+</body>
+
+</html>
