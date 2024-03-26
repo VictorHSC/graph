@@ -71,10 +71,16 @@ body {
     position: relative;
 }
 
-.acoes-item.input {
+.acoes-item.acoes-vertice {
     display: grid;
     gap: 0 var(--gap);
     grid-template-columns: 6fr 6fr 1fr;
+}
+
+.acoes-item.acoes-conexao {
+    display: grid;
+    gap: 0 var(--gap);
+    grid-template-columns: 4fr 4fr 4fr 1fr;
 }
 
 .acoes-item .title {
@@ -133,6 +139,31 @@ body {
     border-color: var(--color-primary);
 }
 
+.acoes-arquivos {
+    display: grid;
+    gap: 0 var(--gap);
+    grid-template-columns: 1fr 1fr;
+}
+
+.acoes-acoes {
+    display: grid;
+    gap: 0 var(--gap);
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
 .acoes-item .button {
-    
+    background-color: var(--color-accent);
+    border: none;
+    border-radius: 11.5px;
+}
+
+.item-log {
+    overflow: auto;
+    padding: 10px;
+}
+
+.item-log p {
+    color: var(--color-offwhite);
+    font-family: Helvetica;
+    font-size: 12px;
 }
