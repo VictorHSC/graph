@@ -51,7 +51,7 @@ function grafoAddVertice(id, descricao) {
     return vertices.push(novo_vertice) && novo_vertice;
 }
 
-function grafoAddArco(id_origem, id_destino) {
+function grafoAddConexao(id_origem, id_destino, tipo) {
 
     if (id_origem == undefined || typeof id_origem !== 'number' || id_origem < 0)
         return console.error("atributo 'id_origem' do vértice vazio ou inválido!", id_origem);
@@ -62,37 +62,13 @@ function grafoAddArco(id_origem, id_destino) {
     if (conexoes.find(c => c.id_origem == id_origem && c.id_destino == id_destino))
         return console.info("Arco já existente!");
 
-    let nova_conexao = {}
-
-    if (nova_conexao = conexoes.find(c => c.id_origem == id_destino && c.id_destino == id_origem && c.tipo == 'aresta'))
-        return nova_conexao
-
-    if (nova_conexao = conexoes.find(c => c.id_origem == id_destino && c.id_destino == id_origem && c.tipo == 'arco')) {
-        nova_conexao.tipo = 'aresta';
-        nova_conexao.atualizacao = true;
-        return nova_conexao;
-    } else {
-        nova_conexao = {
-            id_origem,
-            id_destino,
-            tipo: 'arco'
-        }
-        return conexoes.push(nova_conexao) && nova_conexao;
-    }
-}
-
-function grafoAddAresta(id_origem, id_destino) {
-
-    let nova_conexao = grafoAddArco(id_origem, id_destino);
-
-    if (!nova_conexao) {
-        nova_conexao = grafoAddArco(id_destino, id_origem);
-    } else {
-        if (grafoAddArco(id_destino, id_origem))
-            nova_conexao.atualizacao = false;
+    let nova_conexao = {
+        id_origem,
+        id_destino,
+        tipo: tipo
     }
 
-    return nova_conexao;
+    return conexoes.push(nova_conexao) && nova_conexao;
 }
 
 function grafoAtualizarMatrizAdjacencia() {
@@ -116,7 +92,7 @@ function grafoBuscaLargura(id_vertice) {
     let fila = [];
     let visitados = [];
 
-    let id_vertice_inicial = id_vertice || 0;
+    let id_vertice_inicial = typeof id_vertice === "number" && id_vertice || vertices[0].id;
 
     //log 
     let count = 1;
@@ -152,7 +128,7 @@ function grafoBuscaLargura(id_vertice) {
 function grafoBuscaProfundidade(id_vertice) {
     let visitados = [];
 
-    let id_vertice_inicial = id_vertice || 0;
+    let id_vertice_inicial = typeof id_vertice === "number" && id_vertice || vertices[0].id;
 
     //log 
     let count = 1;

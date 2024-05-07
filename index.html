@@ -13,75 +13,76 @@
 
 <body>
 
-    <div class="grade">
-        <div class="item-grade acoes row">
-            <div class="acoes-item acoes-vertice">
-                <span class="title">Adicionar Vértice</span>
+    <section id="actions">
+        <div class="action-item" id="options">
+            <span class="action-title">Opções</span>
 
-                <div class="input-group">
-                    <label for="input_vertice_id">ID</label>
-                    <input type="number" name="input_vertice_id" id="input_vertice_id" placeholder="0" disabled>
-                </div>
-
-                <div class="input-group">
-                    <label for="input_vertice_descricao">DESC.</label>
-                    <input type="text" name="input_vertice_descricao" id="input_vertice_descricao">
-                </div>
-
-                <button class="input-button" type="button" onclick="interfaceAddVertice()">OK</button>
+            <div class="input-group">
+                <input id="input_dirigido" onchange="interfaceAlterarDirigido()" type="checkbox">
+                <label for="input_dirigido">Dirigido</label>
             </div>
 
-            <div class="acoes-item acoes-conexao">
-                <span class="title">Adicionar Conexão</span>
+            <input onchange="interfaceCarregarArquivo()" type="file" id="input_carregar_arquivo" hidden>
 
-                <div class="input-group">
-                    <label for="input_conexao_tipo">TIPO</label>
-                    <select name="input_conexao_tipo" id="input_conexao_tipo">
-                        <option value="arco">Arco</option>
-                        <option value="aresta">Aresta</option>
-                    </select>
-                </div>
+            <label class="action-btn" for="input_carregar_arquivo" type="button">Importar Grafo</label>
 
-                <div class="input-group">
-                    <label for="input_aresta_de">DE</label>
-                    <select name="input_conexao_id_origem" id="input_conexao_id_origem"
-                        onfocus="interfaceUpdateOptionsConexao(this)"></select>
-                </div>
-
-                <div class="input-group">
-                    <label for="input_aresta_para">PARA</label>
-                    <select name="input_conexao_id_destino" id="input_conexao_id_destino"
-                        onfocus="interfaceUpdateOptionsConexao(this)"></select>
-                </div>
-
-                <button class="input-button" type="button" onclick="interfaceAddConexao()">OK</button>
-            </div>
-
-            <div class="acoes-item acoes-arquivos">
-                <span class="title">Carregar Arquivo</span>
-
-                <input onchange="interfaceCarregarArquivo()" type="file" id="input_carregar_arquivo">
-            </div>
-
-            <div class="acoes-item acoes-acoes">
-                <span class="title">Realizar Ações</span>
-
-                <button class="button" onclick="interfaceBuscaProfundidade()" title="Depth-First Search (DFS)"
-                    type="button">B. Profundidade</button>
-
-                <button class="button" onclick="interfaceBuscaLargura()" title="Breadth-First Search (BFS)" type="button">B. Largura</button>
-
-                <button class="button" onclick="interfaceConectividade()" type="button">Conectividade</button>
-            </div>
+            <button class="action-btn" type="button">Exportar Grafo</button>
         </div>
 
-        <div class="item-grade item-log" id="log">
+        <div class="action-item" id="nodes">
+            <span class="action-title">Vértices</span>
+
+            <div class="input-group">
+                <label for="input_vertice_id">ID</label>
+                <input type="number" id="input_vertice_id" placeholder="0" disabled>
+            </div>
+
+            <div class="input-group">
+                <label for="input_vertice_descricao">Desc.</label>
+                <input type="text" id="input_vertice_descricao">
+            </div>
+
+            <button class="action-btn btn-add" type="button" onclick="interfaceAddVertice()">Adicionar</button>
         </div>
 
-        <div class="item-grade grafo">
-            <div id="visualizacao"></div>
+        <div class="action-item" id="edges">
+            <span class="action-title">Conexões</span>
+
+            <div class="input-group">
+                <label for="input_aresta_de">De</label>
+                <select id="input_conexao_id_origem" onfocus="interfaceUpdateOptionsConexao(this)"></select>
+            </div>
+
+            <div class="input-group">
+                <label for="input_aresta_para">Para</label>
+                <select id="input_conexao_id_destino" onfocus="interfaceUpdateOptionsConexao(this)"></select>
+            </div>
+
+            <button class="action-btn btn-add" type="button" onclick="interfaceAddConexao()">Adicionar</button>
         </div>
-    </div>
+
+        <div class="action-item" id="buttons">
+            <span class="action-title">Ações</span>
+
+            <button class="action-btn" onclick="interfaceBuscaProfundidade()" title="Depth-First Search (DFS)"
+                type="button">B. Profundidade</button>
+
+            <button class="action-btn" onclick="interfaceBuscaLargura()" title="Breadth-First Search (BFS)"
+                type="button">B. Largura</button>
+
+            <button class="action-btn" onclick="interfaceConectividade()" type="button">Conectividade</button>
+
+            <button class="action-btn" onclick="interfaceGerarSudoku(4)">N4</button>
+
+            <button class="action-btn" onclick="interfaceGerarSudoku(9)">N9</button>
+
+            <button class="action-btn" onclick="interfaceGerarSudoku(16)">N16</button>
+        </div>
+    </section>
+
+    <section id="log"></section>
+
+    <section id="graph"></section>
 
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script src="scripts/grafo.js"></script>

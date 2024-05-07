@@ -1,169 +1,105 @@
 :root {
-    --border-radius: 25px;
-    --color-primary: #174031;
-    --color-accent: #2C7359;
-    --color-secondary: #0D0D0D;
-    --color-background: #262626;
-    --color-offwhite: #F2F2F2;
-    --gap: 10px;
+    --border-radius: 10px;
+    --color-background: #212121;
+    --color-blue: #90CBF0;
+    --color-green: #B5F587;
+    --color-purple: #D2A4DB;
+    --color-red: #F09294;
+    --color-yellow: #F2F080;
+    --gap: 10px;    
 }
 
 * {
-    appearance: none;
     box-sizing: border-box;
+    font-family: Helvetica, sans-serif;
+    font-size: 12px;
     margin: 0;
     padding: 0;
 }
 
 body {
-    background-color: var(--color-background);
+    background-color: black;
     height: 100%;
     position: absolute;
     width: 100%;
-}
-
-.grade {
-    background-color: var(--color-secondary);
     display: grid;
     gap: var(--gap);
     grid-template-areas:
-        "acoes log"
-        "grafo grafo";
+        "actions log"
+        "graph graph";
     grid-template-columns: 2fr 1fr;
     grid-template-rows: 1fr 2fr;
-    height: 100%;
     padding: var(--gap);
-    width: 100%;
 }
 
-.grade .item-grade {
+body section {
     background-color: var(--color-background);
     border-radius: var(--border-radius);
+    padding: 10px;
 }
 
-.grade .acoes {
-    grid-area: acoes;
+#actions {
+    grid-area: actions;
 }
 
-.grade .log {
+#log {
     grid-area: log;
 }
 
-.grade .grafo {
-    grid-area: grafo;
-}
-
-#visualizacao {
-    height: 450px;
+#graph {
+    grid-area: graph;
+    max-height: calc(100vh - ((1/3) * 100vh) - 20px);
 }
 
 /* Acões */
-.acoes {
-    display: grid;
+#actions {
+    display: flex;
     gap: var(--gap);
-    grid-template-rows: repeat(4, 1fr);
-    padding: var(--gap);
+    flex-direction: column;
 }
 
-.acoes-item {
-    border: 1px solid var(--color-accent);
+.action-item {
+    align-items: center;
+    display: flex;
+    border: 1px solid white;
     border-radius: calc(var(--border-radius) / 2);
+    flex: 1;
+    flex-grow: 1;
+    justify-content: space-around;
+    padding: 10px;
     position: relative;
 }
 
-.acoes-item.acoes-vertice {
-    display: grid;
-    gap: 0 var(--gap);
-    grid-template-columns: 6fr 6fr 1fr;
-}
-
-.acoes-item.acoes-conexao {
-    display: grid;
-    gap: 0 var(--gap);
-    grid-template-columns: 4fr 4fr 4fr 1fr;
-}
-
-.acoes-item .title {
+.action-title {
     background-color: var(--color-background);
-    color: var(--color-offwhite);
-    font-family: Helvetica;
+    color: white;
     font-size: 12px;
-    left: 8px;
-    padding: 0 5px;
+    left: 10px;
+    padding: 0 4px;
     position: absolute;
     top: -8px;
 }
 
-.input-group {
-    display: grid;
-    grid-template-columns: 1fr 5fr;
-}
-
-.input-group label {
-    color: var(--color-offwhite);
-    font-family: Helvetica;
-    font-size: 12px;
-    margin: auto 5px;
-    text-align: end;
-}
-
-.input-group label::after {
-    content: ":";
-}
-
-.input-group input,
-.input-group select {
-    background-color: var(--color-offwhite);
-    border: none;
+.action-btn {
+    color: var(--color-blue);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-blue);
     border-radius: 5px;
-    color: var(--color-secondary);
-    font-family: Helvetica;
-    font-size: 12px;
-    text-indent: 5px;
-    height: 24px;
-    margin: auto 0;
+    line-height: 22px;
+    padding: 0 5px;
 }
 
-.acoes-item .input-button {
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
-    border-radius: 0 11.5px 11px 0;
-    border-style: solid;
-    color: var(--color-offwhite);
-    font-family: Helvetica;
-    font-size: 12px;
+.action-btn:hover {
+    filter: saturate(2);
+    border-style: dashed;
+    cursor: pointer;
 }
 
-.acoes-item .input-buttonton:hover {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
+.btn-add {
+    color: var(--color-green);
+    border-color: var(--color-green);
 }
 
-.acoes-arquivos {
-    display: grid;
-    gap: 0 var(--gap);
-    grid-template-columns: 1fr 1fr;
-}
-
-.acoes-acoes {
-    display: grid;
-    gap: 0 var(--gap);
-    grid-template-columns: 1fr 1fr 1fr;
-}
-
-.acoes-item .button {
-    background-color: var(--color-accent);
-    border: none;
-    border-radius: 11.5px;
-}
-
-.item-log {
-    overflow: auto;
-    padding: 10px;
-}
-
-.item-log p {
-    color: var(--color-offwhite);
-    font-family: Helvetica;
-    font-size: 12px;
+.input-group {
+    color: white;
 }
