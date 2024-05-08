@@ -6,7 +6,7 @@
     --color-purple: #D2A4DB;
     --color-red: #F09294;
     --color-yellow: #F2F080;
-    --gap: 10px;    
+    --gap: 10px;
 }
 
 * {
@@ -95,11 +95,32 @@ body section {
     cursor: pointer;
 }
 
+.action-btn:disabled {
+    color: gray;
+    border-color: gray;
+}
+
+.action-btn:disabled:hover {
+    filter: none;
+    border-style: solid;
+    cursor: default;
+}
+
 .btn-add {
     color: var(--color-green);
     border-color: var(--color-green);
 }
 
+.btn-rem {
+    color: var(--color-red);
+    border-color: #F09294;
+}
+
 .input-group {
     color: white;
+}
+
+#log {
+    color: white;
+    overflow-y: scroll;
 }

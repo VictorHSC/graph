@@ -1,9 +1,30 @@
-const container = document.getElementById('graph');
+// Interface elements
 
-const interface_nodes = new vis.DataSet();
-const interface_edges = new vis.DataSet();
+// Sections
+const interface_section_actions = document.getElementById('actions');
+const interface_section_log = document.getElementById('log');
+const interface_section_graph = document.getElementById('graph');
 
-const interface_network_options = {
+// Inputs
+const interface_input_dirigido = document.getElementById('input_dirigido');
+const interface_input_vertice_id = document.getElementById('input_vertice_id');
+const interface_input_vertice_descricao = document.getElementById('input_vertice_descricao');
+const interface_input_conexao_tipo = document.getElementById('input_conexao_tipo');
+const interface_input_conexao_id_origem = document.getElementById('input_conexao_id_origem');
+const interface_input_conexao_id_destino = document.getElementById('input_conexao_id_destino');
+
+// Buttons
+const interface_button_remover_vertice = document.getElementById('button_remover_vertice');
+const interface_button_remover_conexao = document.getElementById('button_remover_conexao');
+
+// Color palette 
+const palette = ['#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabed4', '#469990', '#dcbeff', '#9A6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#a9a9a9'];
+
+// Vis.js config
+const interface_vis_nodes = new vis.DataSet();
+const interface_vis_edges = new vis.DataSet();
+
+const interface_vis_options = {
     interaction: {
         tooltipDelay: 100,
         zoomSpeed: 0.25
@@ -30,16 +51,30 @@ const interface_network_options = {
     }
 }
 
-const interface_network = new vis.Network(container, { nodes: interface_nodes, edges: interface_edges }, interface_network_options);
+const interface_vis_network = new vis.Network(interface_section_graph, { nodes: interface_vis_nodes, edges: interface_vis_edges }, interface_vis_options);
 
-const interface_input_dirigido = document.getElementById('input_dirigido');
-const interface_input_vertice_id = document.getElementById('input_vertice_id');
-const interface_input_vertice_descricao = document.getElementById('input_vertice_descricao');
-const interface_input_conexao_tipo = document.getElementById('input_conexao_tipo');
-const interface_input_conexao_id_origem = document.getElementById('input_conexao_id_origem');
-const interface_input_conexao_id_destino = document.getElementById('input_conexao_id_destino');
-const interface_log = document.getElementById('log');
+// Network events
+interface_vis_network.on("selectNode", function (params) {
+    if (params.nodes.length == 1)
+        interface_button_remover_vertice.disabled = false;
+});
 
+interface_vis_network.on("deselectNode", function (params) {
+    if (params.nodes.length == 0)
+        interface_button_remover_vertice.disabled = true;
+});
+
+interface_vis_network.on("selectEdge", function (params) {
+    if (params.edges.length == 1)
+        interface_button_remover_conexao.disabled = false;
+});
+
+interface_vis_network.on("deselectEdge", function (params) {
+    if (params.edges.length == 0)
+        interface_button_remover_conexao.disabled = true;
+});
+
+// Interface functions
 function interfaceAddConexao(conexao) {
 
     let id_origem = (conexao && conexao.id_origem) || +interface_input_conexao_id_origem.value;
@@ -58,7 +93,7 @@ function interfaceAddConexao(conexao) {
         newEdge.arrows = 'to';
     }
 
-    interface_edges.add(newEdge);
+    interface_vis_edges.add(newEdge);
 }
 
 function interfaceAddVertice(vertice) {
@@ -73,7 +108,7 @@ function interfaceAddVertice(vertice) {
         newNode.x = vertice.x * 100;
         newNode.y = vertice.y * 100;
     }
-    interface_nodes.add(newNode);
+    interface_vis_nodes.add(newNode);
     interfaceLimparInputVertice()
     updateCheckboxDirigido();
 }
@@ -85,16 +120,16 @@ function interfaceAlterarDirigido() {
 }
 
 function interfaceAlterarFisica() {
-    interface_network_options.physics = false;
-    interface_network.setOptions(interface_network_options);
+    interface_vis_options.physics = false;
+    interface_vis_network.setOptions(interface_vis_options);
 }
 
 function interfaceBuscaProfundidade() {
-    grafoBuscaProfundidade(interface_network.getSelectedNodes()[0]);
+    grafoBuscaProfundidade(interface_vis_network.getSelectedNodes()[0]);
 }
 
 function interfaceBuscaLargura() {
-    grafoBuscaLargura(interface_network.getSelectedNodes()[0]);
+    grafoBuscaLargura(interface_vis_network.getSelectedNodes()[0]);
 }
 
 async function interfaceGerarSudoku(N) {
@@ -110,8 +145,6 @@ async function interfaceGerarSudoku(N) {
         }
     }
 
-    await new Promise(r => setTimeout(r, 1000));
-
     let ci;
     let cj;
 
@@ -126,7 +159,7 @@ async function interfaceGerarSudoku(N) {
                 newEdge = grafoAddConexao(i * N + j, xi * N + j, 'aresta');
                 newEdge.from = newEdge.id_origem;
                 newEdge.to = newEdge.id_destino;
-                interface_edges.add(newEdge);
+                interface_vis_edges.add(newEdge);
             }
 
             // Cria as conexões com os vertices a baixo
@@ -134,7 +167,7 @@ async function interfaceGerarSudoku(N) {
                 newEdge = grafoAddConexao(i * N + j, i * N + xj, 'aresta');
                 newEdge.from = newEdge.id_origem;
                 newEdge.to = newEdge.id_destino;
-                interface_edges.add(newEdge);
+                interface_vis_edges.add(newEdge);
             }
 
             // Cria as conexões na diagonal baixo-direita (primária)
@@ -145,7 +178,7 @@ async function interfaceGerarSudoku(N) {
                     newEdge = grafoAddConexao(i * N + j, (i + ci) * N + j + cj, 'aresta');
                     newEdge.from = newEdge.id_origem;
                     newEdge.to = newEdge.id_destino;
-                    interface_edges.add(newEdge);
+                    interface_vis_edges.add(newEdge);
                     cj++;
                 }
                 ci++;
@@ -159,7 +192,7 @@ async function interfaceGerarSudoku(N) {
                     newEdge = grafoAddConexao(i * N + j, (i + ci) * N + j - cj, 'aresta');
                     newEdge.from = newEdge.id_origem;
                     newEdge.to = newEdge.id_destino;
-                    interface_edges.add(newEdge);
+                    interface_vis_edges.add(newEdge);
                     cj++;
                 }
                 ci++;
@@ -175,7 +208,7 @@ function interfaceLimparInputVertice() {
 
 function interfaceUpdateOptionsConexao(element) {
     element.length = 0;
-    interface_nodes.forEach(node => {
+    interface_vis_nodes.forEach(node => {
         element.options[element.options.length] = new Option(node.label, node.id);
     });
 }
@@ -184,52 +217,113 @@ function updateCheckboxDirigido() {
     interface_input_dirigido.disabled = vertices.length != 0;
 }
 
-addEventListener('keyup', e => {
-    if (e.keyCode === 8) {
-        interface_network.getSelectedNodes().forEach(node => {
-            node = interface_nodes.get(node);
-            grafoRemVertice(node);
-            interface_nodes.remove(node);
-            updateCheckboxDirigido();
-        });
-        interface_network.getSelectedEdges().forEach(edge => {
-            edge = interface_edges.get(edge);
-            grafoRemConexao(edge);
-            interface_edges.remove(edge);
-        });
-    }
-});
+async function interfaceColorirGrafo() {
 
+    let cores = [];
 
-
-// LIMBO
-
-
-const visitando = function (id) {
-    nodes.getIds().forEach(id => {
-        let node = nodes.get(id);
+    // Define os graus e saturacao dos vértices e remove as cores (caso já tivesse)
+    interface_vis_nodes.get().forEach(node => {
+        node.grau = interface_vis_edges.get().filter(edge => edge.from == node.id).length;
+        node.saturacao = 0;
         node.color = {
-            background: '#F2F2F2',
-            border: '#2C7359'
+            background: '#FFF',
+            border: '#90CBF0'
         }
-        nodes.update(node);
+        node.colored = false;
     });
 
-    let node = nodes.get(id);
-    node.color = {
-        background: '#F2F2F2',
-        border: '#FF0000'
+    interface_vis_nodes.update(interface_vis_nodes.get());
+
+    let vertice_inicial = interface_vis_network.getSelectedNodes().map(n => interface_vis_nodes.get(n))[0] || interface_vis_nodes.get()[0];
+
+    interface_vis_edges.get().filter(e => e.from == vertice_inicial.id || e.to == vertice_inicial.id).forEach(e => {
+        let id = e.from == vertice_inicial.id ? e.to : e.from;
+        let vertice_adjacente = interface_vis_nodes.get().filter(n => n.id == id)[0];
+        vertice_adjacente.saturacao++;
+    });
+
+    vertice_inicial.color = getColor();
+    vertice_inicial.colored = true;
+    cores.push(vertice_inicial.color);
+
+    interface_vis_nodes.update(vertice_inicial);
+
+    await new Promise(r => setTimeout(r, 500));
+
+    while (interface_vis_nodes.get().filter(node => node.colored).length < interface_vis_nodes.get().length) {
+
+        let vertice_atual = interface_vis_nodes.get().filter(n => !n.colored).sort((a, b) => a.saturacao < b.saturacao)[0];
+        let cores_disponiveis = cores.slice();
+
+        interface_vis_edges.get().filter(e => e.from == vertice_atual.id || e.to == vertice_atual.id).forEach(e => {
+            let id = e.from == vertice_atual.id ? e.to : e.from;
+            let vertice_adjacente = interface_vis_nodes.get().filter(n => n.id == id)[0];
+            if (vertice_adjacente.colored && cores_disponiveis.includes(vertice_adjacente.color)) {
+                cores_disponiveis.splice(cores_disponiveis.indexOf(vertice_adjacente.color), 1);
+            }
+
+            vertice_adjacente.saturacao++;
+        });
+
+
+        if (cores_disponiveis.length >= 1) {
+            vertice_atual.color = cores_disponiveis[0];
+        } else {
+            vertice_atual.color = getColor();
+            cores.push(vertice_atual.color);
+        }
+
+        vertice_atual.colored = true;
+
+        interface_vis_nodes.update(vertice_atual);
+
+        await new Promise(r => setTimeout(r, 500));
     }
 
-    nodes.update(node);
+    interfaceLog('Coloração do grafo finalizada!, cores utilizadas: ' + cores.length);
+
+    function getColor() {
+        let proxima_cor = palette.filter(c => !cores.includes(c))[0];
+
+        if (proxima_cor != undefined) {
+            return proxima_cor;
+        } else {
+            return '#' + Math.floor(Math.random() * 16777215).toString(16);
+        }
+    }
+}
+
+
+function interfaceRemVertice() {
+    let vertice = interface_vis_network.getSelectedNodes().map(n => interface_vis_nodes.get(n))[0];
+    let conexoes = interface_vis_network.getSelectedEdges().map(e => interface_vis_edges.get(e));
+
+    grafoRemVertice(vertice);
+    interface_vis_nodes.remove(vertice);
+
+    conexoes.forEach(conexao => {
+        grafoRemConexao(conexao);
+        interface_vis_edges.remove(conexao);
+    });
+
+    interface_button_remover_vertice.disabled = true;
+}
+
+function interfaceRemConexao() {
+    let conexao = interface_vis_network.getSelectedEdges().map(e => interface_vis_edges.get(e))[0];
+
+    grafoRemConexao(conexao);
+    interface_vis_edges.remove(conexao);
+
+    interface_button_remover_conexao.disabled = true;
 }
 
 function interfaceCarregarArquivo(event) {
     vertices.splice(0, vertices.length)
     conexoes.splice(0, conexoes.length)
-    interface_nodes.forEach(n => interface_nodes.remove(n));
+    interface_vis_nodes.forEach(n => interface_vis_nodes.remove(n));
     //interface_nodes.update();
-    interface_edges.forEach(e => interface_edges.remove(e));
+    interface_vis_edges.forEach(e => interface_vis_edges.remove(e));
     //interface_edges.update();
     interface_input_vertice_id.value = 0;
     var meuImput = document.getElementById('input_carregar_arquivo');
@@ -253,7 +347,7 @@ function interfaceLog(message) {
     let p_element = document.createElement("p");
     let message_element = document.createTextNode(message);
     p_element.appendChild(message_element);
-    interface_log.appendChild(p_element);
+    interface_section_log.appendChild(p_element);
 }
 
 function interfaceConectividade() {

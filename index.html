@@ -27,6 +27,12 @@
             <label class="action-btn" for="input_carregar_arquivo" type="button">Importar Grafo</label>
 
             <button class="action-btn" type="button">Exportar Grafo</button>
+
+            <button class="action-btn" onclick="interfaceGerarSudoku(4)">N4</button>
+
+            <button class="action-btn" onclick="interfaceGerarSudoku(9)">N9</button>
+
+            <button class="action-btn" onclick="interfaceGerarSudoku(16)">N16</button>
         </div>
 
         <div class="action-item" id="nodes">
@@ -43,6 +49,8 @@
             </div>
 
             <button class="action-btn btn-add" type="button" onclick="interfaceAddVertice()">Adicionar</button>
+
+            <button class="action-btn btn-rem" id="button_remover_vertice" type="button" onclick="interfaceRemVertice()" disabled>Remover</button>
         </div>
 
         <div class="action-item" id="edges">
@@ -59,6 +67,8 @@
             </div>
 
             <button class="action-btn btn-add" type="button" onclick="interfaceAddConexao()">Adicionar</button>
+
+            <button class="action-btn btn-rem" id="button_remover_conexao" type="button" onclick="interfaceRemConexao()" disabled>Remover</button>
         </div>
 
         <div class="action-item" id="buttons">
@@ -72,11 +82,7 @@
 
             <button class="action-btn" onclick="interfaceConectividade()" type="button">Conectividade</button>
 
-            <button class="action-btn" onclick="interfaceGerarSudoku(4)">N4</button>
-
-            <button class="action-btn" onclick="interfaceGerarSudoku(9)">N9</button>
-
-            <button class="action-btn" onclick="interfaceGerarSudoku(16)">N16</button>
+            <button class="action-btn" onclick="interfaceColorirGrafo()" type="button">Colorir</button>
         </div>
     </section>
 
