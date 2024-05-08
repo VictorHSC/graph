@@ -90,7 +90,7 @@ body section {
 }
 
 .action-btn:hover {
-    filter: saturate(2);
+    filter: saturate(3);
     border-style: dashed;
     cursor: pointer;
 }
@@ -113,11 +113,48 @@ body section {
 
 .btn-rem {
     color: var(--color-red);
-    border-color: #F09294;
+    border-color: var(--color-red);
+}
+
+.btn-action {
+    color: var(--color-purple);
+    border-color: var(--color-purple);
+}
+
+.btn-color {
+    background-image: repeating-linear-gradient(to right, var(--color-purple), var(--color-red), var(--color-yellow), var(--color-green), var(--color-blue));
+    border: none;
+    color: var(--color-background);
+    font-weight: bold;
+}
+
+.btn-color:hover {
+    border: none;
 }
 
 .input-group {
+    align-items: center;
     color: white;
+    display: flex;
+    gap: var(--gap);
+}
+
+input[type="range"] {
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+    height: 15px;
+    background-image: repeating-linear-gradient(to right, var(--color-purple), var(--color-red), var(--color-yellow), var(--color-green), var(--color-blue));
+    border-radius: 15px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    height: 15px;
+    width: 15px;
+    background-color: white;
+    border-radius: 50%;
+    border: 2px solid var(--color-background);
 }
 
 #log {

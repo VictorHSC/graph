@@ -50,7 +50,8 @@
 
             <button class="action-btn btn-add" type="button" onclick="interfaceAddVertice()">Adicionar</button>
 
-            <button class="action-btn btn-rem" id="button_remover_vertice" type="button" onclick="interfaceRemVertice()" disabled>Remover</button>
+            <button class="action-btn btn-rem" id="button_remover_vertice" type="button" onclick="interfaceRemVertice()"
+                disabled>Remover</button>
         </div>
 
         <div class="action-item" id="edges">
@@ -68,21 +69,27 @@
 
             <button class="action-btn btn-add" type="button" onclick="interfaceAddConexao()">Adicionar</button>
 
-            <button class="action-btn btn-rem" id="button_remover_conexao" type="button" onclick="interfaceRemConexao()" disabled>Remover</button>
+            <button class="action-btn btn-rem" id="button_remover_conexao" type="button" onclick="interfaceRemConexao()"
+                disabled>Remover</button>
         </div>
 
         <div class="action-item" id="buttons">
             <span class="action-title">Ações</span>
 
-            <button class="action-btn" onclick="interfaceBuscaProfundidade()" title="Depth-First Search (DFS)"
-                type="button">B. Profundidade</button>
+            <button class="action-btn btn-action" onclick="interfaceBuscaProfundidade()"
+                title="Depth-First Search (DFS)" type="button">B. Profundidade</button>
 
-            <button class="action-btn" onclick="interfaceBuscaLargura()" title="Breadth-First Search (BFS)"
+            <button class="action-btn btn-action" onclick="interfaceBuscaLargura()" title="Breadth-First Search (BFS)"
                 type="button">B. Largura</button>
 
-            <button class="action-btn" onclick="interfaceConectividade()" type="button">Conectividade</button>
+            <button class="action-btn btn-action" onclick="interfaceConectividade()"
+                type="button">Conectividade</button>
 
-            <button class="action-btn" onclick="interfaceColorirGrafo()" type="button">Colorir</button>
+            <div class="input-group">
+                <button class="action-btn btn-color" onclick="interfaceColorirGrafo()" type="button">Colorir</button>
+
+                <input type="range" max="1000" min="1" id="interface_input_speed" value="10">
+            </div>
         </div>
     </section>
 

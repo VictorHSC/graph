@@ -12,6 +12,7 @@ const interface_input_vertice_descricao = document.getElementById('input_vertice
 const interface_input_conexao_tipo = document.getElementById('input_conexao_tipo');
 const interface_input_conexao_id_origem = document.getElementById('input_conexao_id_origem');
 const interface_input_conexao_id_destino = document.getElementById('input_conexao_id_destino');
+const interface_input_speed = document.getElementById('interface_input_speed');
 
 // Buttons
 const interface_button_remover_vertice = document.getElementById('button_remover_vertice');
@@ -37,7 +38,7 @@ const interface_vis_options = {
             border: '#90CBF0',
             highlight: {
                 background: '#FFF',
-                border: '#F09294'
+                border: '#F2F080'
             }
         }
     },
@@ -45,7 +46,7 @@ const interface_vis_options = {
         width: 1,
         color: {
             color: '#90CBF0',
-            highlight: '#F09294'
+            highlight: '#F2F080'
         },
         selectionWidth: 3
     }
@@ -104,7 +105,7 @@ function interfaceAddVertice(vertice) {
     let newNode = grafoAddVertice(id, descricao);
     newNode.label = newNode.descricao;
     newNode.title = "Id: " + newNode.id + "\nDesc.: " + newNode.descricao;
-    if (vertice.x && vertice.y) {
+    if (vertice && vertice.x && vertice.y) {
         newNode.x = vertice.x * 100;
         newNode.y = vertice.y * 100;
     }
@@ -248,7 +249,7 @@ async function interfaceColorirGrafo() {
 
     interface_vis_nodes.update(vertice_inicial);
 
-    await new Promise(r => setTimeout(r, 500));
+    await new Promise(r => setTimeout(r, interface_input_speed.value));
 
     while (interface_vis_nodes.get().filter(node => node.colored).length < interface_vis_nodes.get().length) {
 
@@ -277,7 +278,7 @@ async function interfaceColorirGrafo() {
 
         interface_vis_nodes.update(vertice_atual);
 
-        await new Promise(r => setTimeout(r, 500));
+        await new Promise(r => setTimeout(r, interface_input_speed.value));
     }
 
     interfaceLog('Coloração do grafo finalizada!, cores utilizadas: ' + cores.length);
@@ -348,6 +349,7 @@ function interfaceLog(message) {
     let message_element = document.createTextNode(message);
     p_element.appendChild(message_element);
     interface_section_log.appendChild(p_element);
+    interface_section_log.scrollTop = interface_section_log.scrollHeight;
 }
 
 function interfaceConectividade() {
