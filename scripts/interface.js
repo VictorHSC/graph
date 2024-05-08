@@ -272,6 +272,19 @@ async function interfaceColorirGrafo() {
                 cores_disponiveis.splice(cores_disponiveis.indexOf(vertice_adjacente.color), 1);
             }
 
+            let cores_adjacentes = [];
+
+            interface_vis_edges.get().filter(e => e.from == vertice_adjacente.id || e.to == vertice_adjacente.id).forEach(e => {
+                let id_adjacente2 = e.from == vertice_adjacente.id ? e.to : e.from;
+                let vertice_adjacente2 = interface_vis_nodes.get().filter(n => n.id == id_adjacente2)[0];
+
+                if (!cores_adjacentes.includes(vertice_adjacente2.color)) {
+                    cores_adjacentes.push(vertice_adjacente2.color);
+                }
+
+                vertice_adjacente.saturacao = cores_adjacentes.length;
+            });
+
             vertice_adjacente.saturacao++;
         });
 
