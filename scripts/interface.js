@@ -249,7 +249,7 @@ async function interfaceColorirGrafo() {
     interface_vis_edges.get().filter(e => e.from == vertice_inicial.id || e.to == vertice_inicial.id).forEach(e => {
         let id = e.from == vertice_inicial.id ? e.to : e.from;
         let vertice_adjacente = interface_vis_nodes.get().filter(n => n.id == id)[0];
-        
+
         vertice_adjacente.saturacao++;
     });
 
@@ -272,21 +272,7 @@ async function interfaceColorirGrafo() {
             if (vertice_adjacente.colored && cores_disponiveis.includes(vertice_adjacente.color)) {
                 cores_disponiveis.splice(cores_disponiveis.indexOf(vertice_adjacente.color), 1);
             }
-
-            let cores_adjacentes = [];
-
-            interface_vis_edges.get().filter(e => e.from == vertice_adjacente.id || e.to == vertice_adjacente.id).forEach(e => {
-                let id_adjacente2 = e.from == vertice_adjacente.id ? e.to : e.from;
-                let vertice_adjacente2 = interface_vis_nodes.get().filter(n => n.id == id_adjacente2)[0];
-
-                if (!cores_adjacentes.includes(vertice_adjacente2.color)) {
-                    cores_adjacentes.push(vertice_adjacente2.color);
-                }
-            });
-
-            vertice_adjacente.saturacao = cores_adjacentes.length;
         });
-
 
         if (cores_disponiveis.length >= 1) {
             vertice_atual.color = cores_disponiveis[0];
@@ -296,6 +282,23 @@ async function interfaceColorirGrafo() {
         }
 
         vertice_atual.colored = true;
+
+        // Atualiza a saturação dos vértices adjacentes
+        interface_vis_edges.get().filter(e => e.from == vertice_atual.id || e.to == vertice_atual.id).forEach(e => {
+            let vertice_adjacente = interface_vis_nodes.get().filter(n => n.id == (e.from == vertice_atual.id ? e.to : e.from))[0];
+
+            let cores_adjacentes = [];
+
+            interface_vis_edges.get().filter(e => e.from == vertice_adjacente.id || e.to == vertice_adjacente.id).forEach(e2 => {
+                let vertice_adjacente2 = interface_vis_nodes.get().filter(n => n.id == (e2.from == vertice_adjacente.id ? e2.to : e2.from))[0];
+
+                if (vertice_adjacente2.colored && !cores_adjacentes.includes(vertice_adjacente2.color)) {
+                    cores_adjacentes.push(vertice_adjacente2.color);
+                }
+            });
+
+            vertice_adjacente.saturacao = cores_adjacentes.length;
+        });
 
         interface_vis_nodes.update(vertice_atual);
 
