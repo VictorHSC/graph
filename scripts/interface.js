@@ -281,11 +281,9 @@ async function interfaceColorirGrafo() {
                 if (!cores_adjacentes.includes(vertice_adjacente2.color)) {
                     cores_adjacentes.push(vertice_adjacente2.color);
                 }
-
-                vertice_adjacente.saturacao = cores_adjacentes.length;
             });
 
-            vertice_adjacente.saturacao++;
+            vertice_adjacente.saturacao = cores_adjacentes.length;
         });
 
 
