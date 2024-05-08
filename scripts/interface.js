@@ -249,6 +249,7 @@ async function interfaceColorirGrafo() {
     interface_vis_edges.get().filter(e => e.from == vertice_inicial.id || e.to == vertice_inicial.id).forEach(e => {
         let id = e.from == vertice_inicial.id ? e.to : e.from;
         let vertice_adjacente = interface_vis_nodes.get().filter(n => n.id == id)[0];
+        
         vertice_adjacente.saturacao++;
     });
 
