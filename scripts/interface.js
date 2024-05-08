@@ -135,6 +135,13 @@ function interfaceBuscaLargura() {
 
 async function interfaceGerarSudoku(N) {
 
+    // Reseta o grafo
+    vertices.splice(0, vertices.length)
+    conexoes.splice(0, conexoes.length)
+    interface_vis_nodes.forEach(n => interface_vis_nodes.remove(n));
+    interface_vis_edges.forEach(e => interface_vis_edges.remove(e));
+    interface_input_vertice_id.value = 0;
+
     interfaceAlterarFisica(false);
 
     let sqrtN = Math.sqrt(N);
@@ -142,7 +149,7 @@ async function interfaceGerarSudoku(N) {
     // Cria todos os véritices
     for (let i = 1; i <= N; i++) {
         for (let j = 1; j <= N; j++) {
-            interfaceAddVertice({ descricao: i + ',' + j, x: j, y: i });
+            interfaceAddVertice({ descricao: i + ', ' + j, x: j, y: i });
         }
     }
 
@@ -153,7 +160,7 @@ async function interfaceGerarSudoku(N) {
         for (let j = 0; j < N; j++) {
             // percorre cada item da matriz [i, j]
 
-            await new Promise(r => setTimeout(r, 5))
+            await new Promise(r => setTimeout(r, 1))
 
             // Cria as conexões com os vertices a direita
             for (let xi = i + 1; xi < N; xi++) {
@@ -200,6 +207,8 @@ async function interfaceGerarSudoku(N) {
             }
         }
     }
+
+    interfaceLog('Grafo ' + N + 'x' + N + ' finalizado!');
 }
 
 function interfaceLimparInputVertice() {
@@ -320,13 +329,14 @@ function interfaceRemConexao() {
 }
 
 function interfaceCarregarArquivo(event) {
+
+    // Reseta o grafo
     vertices.splice(0, vertices.length)
     conexoes.splice(0, conexoes.length)
     interface_vis_nodes.forEach(n => interface_vis_nodes.remove(n));
-    //interface_nodes.update();
     interface_vis_edges.forEach(e => interface_vis_edges.remove(e));
-    //interface_edges.update();
     interface_input_vertice_id.value = 0;
+
     var meuImput = document.getElementById('input_carregar_arquivo');
     var reader = new FileReader();
     reader.readAsDataURL(meuImput.files[0]);
