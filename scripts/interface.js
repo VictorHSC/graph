@@ -98,13 +98,25 @@ function interfaceAddConexao(conexao) {
 }
 
 function interfaceAddVertice(vertice) {
+    console.log(vertice);
 
-    let id = (vertice && vertice.id) || +interface_input_vertice_id.value || 0;
+    let id
+    if (vertice && typeof vertice.id === 'number') {
+        id = vertice.id;
+    } else {
+        id = +interface_input_vertice_id.value || 0;
+    };
     let descricao = (vertice && vertice.descricao) || interface_input_vertice_descricao.value
-
+    console.log(id)
     let newNode = grafoAddVertice(id, descricao);
+    console.log(newNode);
+
     newNode.label = newNode.descricao;
     newNode.title = "Id: " + newNode.id + "\nDesc.: " + newNode.descricao;
+    if (typeof vertice.duracao === 'number') {
+        newNode.title += "\nDuração: " + vertice.duracao;
+        newNode.duracao = vertice.duracao;
+    }
     if (vertice && vertice.x && vertice.y) {
         newNode.x = vertice.x * 100;
         newNode.y = vertice.y * 100;
@@ -352,21 +364,81 @@ function interfaceCarregarArquivo(event) {
     interface_vis_edges.forEach(e => interface_vis_edges.remove(e));
     interface_input_vertice_id.value = 0;
 
-    var meuImput = document.getElementById('input_carregar_arquivo');
+    var arquivo = document.getElementById('input_carregar_arquivo').files[0];
+
     var reader = new FileReader();
-    reader.readAsDataURL(meuImput.files[0]);
-    reader.onload = function () {
-        // Aqui temos a sua imagem convertida em string em base64.
-        let grafo = JSON.parse(atob(reader.result.split(',')[1]));
 
-        grafo.vertices.forEach(vertice => {
-            interfaceAddVertice(vertice);
-        });
+    switch (arquivo.type) {
+        case 'application/json':
+            reader.readAsDataURL(arquivo);
 
-        grafo.conexoes.forEach(conexao => {
-            interfaceAddConexao(conexao);
-        });
-    };
+            reader.onload = function () {
+                let grafo = JSON.parse(atob(reader.result.split(',')[1]));
+
+                grafo.vertices.forEach(vertice => {
+                    interfaceAddVertice(vertice);
+                });
+
+                grafo.conexoes.forEach(conexao => {
+                    interfaceAddConexao(conexao);
+                });
+            };
+            break;
+        case 'text/csv':
+            interface_input_dirigido.checked = true;
+
+            reader.readAsDataURL(arquivo);
+
+            reader.onload = function () {
+                texto = atob(reader.result.split(',')[1]);
+
+                let linhas = texto.split('\n');
+
+                let vertices = [];
+                let conexoes = [];
+
+                vertices.push({ id: 0, descricao: 'Início', duracao: 0 });
+                vertices.push({ id: 1, descricao: 'Término', duracao: 0 });
+
+                let id = 2;
+
+                linhas.forEach(linha => {
+                    linha = linha.split(',');
+                    vertices.push({ id, descricao: linha[0], duracao: +linha[1] });
+                    id++;
+                });
+
+                linhas.forEach(linha => {
+                    linha = linha.split(',');
+                    linha[2].split(';').forEach(conexao => {
+                        if (conexao) {
+                            conexoes.push({ id_destino: vertices.find(v => v.descricao == linha[0]).id, id_origem: vertices.find(v => v.descricao == conexao).id, tipo: 'arco' });
+                        } else {
+                            conexoes.push({ id_destino: vertices.find(v => v.descricao == linha[0]).id, id_origem: 0, tipo: 'arco' });
+                        }
+                    });
+                });
+
+                linhas.forEach(linha => {
+                    linha = linha.split(',');
+                    let id = vertices.find(v => v.descricao == linha[0]).id;
+                    if (!conexoes.map(c => c.id_origem).includes(id)) {
+                        conexoes.push({ id_destino: 1, id_origem: id, tipo: 'arco' });
+                    }
+                });
+
+                vertices.forEach(vertice => {
+                    interfaceAddVertice(vertice);
+                });
+
+                conexoes.forEach(conexao => {
+                    interfaceAddConexao(conexao);
+                });
+            };
+            break;
+        default:
+            console.log('Tipo de arquivo não aceito!');
+    }
 }
 
 function interfaceLog(message) {
@@ -421,4 +493,121 @@ function interfaceConectividade() {
                 return i;
         }
     }
+}
+
+function interfaceCaminhoCritico() {
+    let inicio = 0;
+    let termino = 1;
+
+    // Arrays
+    let vertices = [];
+    let conexoes = [];
+    let criticos = [inicio, termino];
+
+    // Preencho os vertices, baseado no grafo
+    interface_vis_nodes.forEach(n => {
+        vertices.push({ id: n.id, duracao: n.duracao });
+    });
+
+    // Preencho as conexoes, baseado no grafo
+    interface_vis_edges.forEach(e => {
+        conexoes.push({ id: e.id, id_origem: e.from, id_destino: e.to });
+    });
+
+    // iniciando pelo vertice 'Início', realiza a ida, recursivamente
+    conexoes.filter(c => c.id_origem == inicio).forEach(c => {
+        ida(c.id_destino);
+    });
+
+    // Para facilitar na volta, é colocado o valor de primeiro_fim como ultimo_inicio no vértice 'Término'
+    let vTermino = vertices.find(v => v.id == termino);
+    vTermino.ultimo_inicio = vTermino.primeiro_fim;
+
+    // iniciando pelo vertice 'Término', realiza a volta, recursivamente
+    conexoes.filter(c => c.id_destino == termino).forEach(c => {
+        volta(c.id_origem);
+    });
+
+    function ida(vertice_id) {
+        // Pego o vertice
+        let vertice = vertices.find(v => v.id == vertice_id);
+
+        // Pego o maior primeiro_fim, de um vértice precedente
+        let max = 0;
+        conexoes.filter(c => c.id_destino == vertice_id).forEach(c => {
+            let vertice_pre = vertices.find(v => v.id == c.id_origem);
+            let primeiro_fim = vertice_pre?.primeiro_fim || vertice_pre.duracao;
+            if (primeiro_fim > max)
+                max = primeiro_fim;
+        });
+        vertice.primeiro_inicio = max;
+
+        // Somo a duração
+        vertice.primeiro_fim = vertice.duracao + max;
+
+        // Realizo recursivamente para os próximos vértices
+        conexoes.filter(c => c.id_origem == vertice_id).forEach(c => {
+            ida(c.id_destino);
+        });
+    }
+
+    function volta(vertice_id) {
+        // Pego o vertice
+        let vertice = vertices.find(v => v.id == vertice_id);
+
+        // Pego o menor ultimo_inicio, de um vértice sucessor
+        let min = -1;
+        conexoes.filter(c => c.id_origem == vertice_id).forEach(c => {
+            let vertice_pos = vertices.find(v => v.id == c.id_destino);
+            if (min == -1 || vertice_pos.ultimo_inicio < min) {
+                min = vertice_pos.ultimo_inicio;
+            }
+        });
+        vertice.ultimo_fim = min;
+
+        // Subtraio a duração
+        vertice.ultimo_inicio = vertice.ultimo_fim - vertice.duracao;
+
+        // Encontro a folga
+        vertice.folga = vertice.ultimo_fim - vertice.primeiro_fim;
+
+        // Caso a folga seja 0, marco o vértice como vértice crítico
+        if (vertice.folga == 0)
+            criticos.push(vertice_id);
+
+        // Realizo recursivamente para os próximos vértices
+        conexoes.filter(c => c.id_destino == vertice_id).forEach(c => {
+            volta(c.id_origem);
+        });
+    }
+
+    // Mudar a cor
+    vertices.forEach(v => {
+        let vertice = interface_vis_nodes.get(v.id);
+
+        vertice.title = '\t' + vertice.descricao + '\t|\t' + vertice.duracao;
+
+        if (v.id > 1) {
+            vertice.title += '\n' +
+                '\t' + v.primeiro_inicio + '\t|\t' + v.primeiro_fim + '\n' +
+                '\t' + v.ultimo_inicio + '\t|\t' + v.ultimo_fim + '\n' +
+                '\tF\t|\t' + v.folga;
+        }
+
+        if (criticos.includes(v.id)) {
+            vertice.color = {
+                border: '#F00'
+            };
+
+            conexoes.filter(c => c.id_origem == v.id).forEach(c => {
+                if (criticos.includes(c.id_destino)) {
+                    let conexao = interface_vis_edges.get(c.id);
+                    conexao.color = '#F00';
+                    interface_vis_edges.update(conexao);
+                }
+            });
+        }
+
+        interface_vis_nodes.update(vertice);
+    });
 }

@@ -22,11 +22,19 @@
                 <label for="input_dirigido">Dirigido</label>
             </div>
 
-            <input onchange="interfaceCarregarArquivo()" type="file" id="input_carregar_arquivo" hidden>
+            <div class="input-group">
+                <input id="input_dirigido" onchange="interfaceAlterarDirigido()" type="checkbox">
+                <label for="input_dirigido">Física</label>
+            </div>
+        </div>
 
-            <label class="action-btn" for="input_carregar_arquivo" type="button">Importar Grafo</label>
+        <div class="action-item" id="options">
+            <span class="action-title">Grafo</span>
 
-            <button class="action-btn" type="button">Exportar Grafo</button>
+            <input accept=".csv,.json" onchange="interfaceCarregarArquivo()" type="file" id="input_carregar_arquivo"
+                hidden>
+
+            <label class="action-btn" for="input_carregar_arquivo" type="button">Importar (.csv ou .json)</label>
 
             <button class="action-btn" onclick="interfaceGerarSudoku(4)">N4</button>
 
@@ -40,12 +48,12 @@
 
             <div class="input-group">
                 <label for="input_vertice_id">ID</label>
-                <input type="number" id="input_vertice_id" placeholder="0" disabled>
+                <input type="number" id="input_vertice_id" placeholder="0" style="width: 75px;" disabled>
             </div>
 
             <div class="input-group">
                 <label for="input_vertice_descricao">Desc.</label>
-                <input type="text" id="input_vertice_descricao">
+                <input type="text" id="input_vertice_descricao" style="width: 75px;">
             </div>
 
             <button class="action-btn btn-add" type="button" onclick="interfaceAddVertice()">Adicionar</button>
@@ -59,12 +67,14 @@
 
             <div class="input-group">
                 <label for="input_aresta_de">De</label>
-                <select id="input_conexao_id_origem" onfocus="interfaceUpdateOptionsConexao(this)"></select>
+                <select id="input_conexao_id_origem" onfocus="interfaceUpdateOptionsConexao(this)"
+                    style="width: 75px;"></select>
             </div>
 
             <div class="input-group">
                 <label for="input_aresta_para">Para</label>
-                <select id="input_conexao_id_destino" onfocus="interfaceUpdateOptionsConexao(this)"></select>
+                <select id="input_conexao_id_destino" onfocus="interfaceUpdateOptionsConexao(this)"
+                    style="width: 75px;"></select>
             </div>
 
             <button class="action-btn btn-add" type="button" onclick="interfaceAddConexao()">Adicionar</button>
@@ -74,7 +84,7 @@
         </div>
 
         <div class="action-item" id="buttons">
-            <span class="action-title">Ações</span>
+            <span class="action-title">M1 Buscas e Conexidade</span>
 
             <button class="action-btn btn-action" onclick="interfaceBuscaProfundidade()"
                 title="Depth-First Search (DFS)" type="button">B. Profundidade</button>
@@ -84,18 +94,31 @@
 
             <button class="action-btn btn-action" onclick="interfaceConectividade()"
                 type="button">Conectividade</button>
+        </div>
+
+        <div class="action-item" id="buttons">
+            <span class="action-title">M2 Coloração</span>
+
+            <button class="action-btn btn-color" onclick="interfaceColorirGrafo()" type="button">Colorir</button>
 
             <div class="input-group">
-                <button class="action-btn btn-color" onclick="interfaceColorirGrafo()" type="button">Colorir</button>
-
+                <label for="input_aresta_para">Velocidade</label>
                 <input type="range" max="1000" min="1" id="interface_input_speed" value="10">
             </div>
         </div>
+
+        <div class="action-item" id="buttons">
+            <span class="action-title">M3 Caminho Crítico</span>
+
+            <button class="action-btn btn-action" onclick="interfaceCaminhoCritico()" type="button">Caminho
+                Crítico</button>
+
+        </div>
     </section>
 
-    <section id="log"></section>
-
     <section id="graph"></section>
+
+    <section id="log"></section>
 
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script src="scripts/grafo.js"></script>
